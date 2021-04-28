@@ -1,8 +1,8 @@
 import os
 import sys
 import inspect
-import clr
-import ctypes
+import clr  # allows to interact with .NET common language runtime
+import ctypes  # allows C compatible data types and calling functions in DLLs or shared libraries
 import numpy as np
 
 maxScpiResponse = 65535
@@ -97,13 +97,9 @@ def loadSegmentData(inst, segNum, segData):
             print("{0}".format(res.RespStr))
             
 def loadDLL():
+    # This function loads the .NET DLL into memory
+    clr.AddReference(r'E:\PycharmProjects\Proteus\admin\TEPAdmin.dll')
 
-    # Load .NET DLL into memory
-    # The R lets python interpret the string RAW so you can put in Windows paths easy
-    #clr.AddReference(R'D:\Projects\Alexey\ProteusAwg\PyScpiTest\TEPAdmin.dll') 
-
-    winpath = os.environ['WINDIR'] + "\\System32\\"
-    clr.AddReference(winpath + R'TEPAdmin.dll')  
     from TaborElec.Proteus.CLI.Admin import CProteusAdmin
     from TaborElec.Proteus.CLI.Admin import IProteusInstrument
     return CProteusAdmin(OnLoggerEvent);

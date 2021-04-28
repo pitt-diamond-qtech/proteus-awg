@@ -25,8 +25,8 @@ class Proteus:
 
     def __init__(self):
         try:
-            self.admin = loadDLL()
-            self.slotId = self.getSlotId(self.admin)
+            self.admin = loadDLL()  # initializes the DLL file
+            self.slotId = self.getSlotId(self.admin)  # uses the DLL file to call the instruments
             if not self.slotId:
                 print("Invalid choice!")
             else:
@@ -69,7 +69,7 @@ class Proteus:
                 sel = slotIds[0]
             else:
                 sel = input("Please select slot-Id:")
-            slotId = np.uint32(sel)
+                slotId = np.uint32(sel)
         except Exception as e:
             print(e)
         return slotId
@@ -99,11 +99,11 @@ class Proteus:
     def cleanup(self):
         self.admin.Close()
 
-    def Sine(self):
+    def Wave(self):
         inst = self.inst
         sclk=self.sclk
 
-        seg_file_path = datapath + '\\segments\\csv\\test.csv'
+        seg_file_path = datapath + 'segments\\csv\\FiveCyclesSine_16Bit2048pts.csv'
 
         # get hw option
         self.sendcommand("*OPT?")
