@@ -39,11 +39,11 @@ class Proteus:
                     self.instId = self.inst.InstrId
             self.resp = self.sendcommand(":SYST:INF:MODel?")
             if self.resp == "P1284M":
-                self.sclk = 1.25e9
-                self.bits = 16
+                self.sclk=1.25e9
+                self.bits=16
             elif self.resp == "P2582M":
-                self.sclk = 2.5e9
-                self.bits = 16
+                self.sclk=2.5e9
+                self.bits=16
         except Exception as e:
             print(e)
 
@@ -57,6 +57,7 @@ class Proteus:
                 slotInfo = admin.GetSlotInfo(slotId)
                 if slotInfo:
                     if not slotInfo.IsDummySlot:
+
                         n = n + 1
                         print("Slot-ID {0} -> IDN=\'{1}\' -> Status: IsInUse={2}, IsDummy={3}".
                               format(slotId, slotInfo.GetIdnStr(),
@@ -64,15 +65,15 @@ class Proteus:
                                      'Yes' if slotInfo.IsDummySlot != 0 else 'No'))
                     else:
                         dummy = 1
-                        # print("{0}. Slot-ID {1} - Failed to acquire Slot Information!".format(i + 1,slotId))
-
-            # if n == 1:
-            #     sel = slotIds[0]
-            # else:
-            sel = input("Please select slot-Id:")
-            if sel == 1:
-                self.admin.Close()
-            slotId = np.uint32(sel)
+                        # print("{0}. Slot-ID {1} - Failed to acquire Slot
+                        # Information!".format(i + 1,slotId))
+            if n == 1:
+                sel = slotIds[0]
+            else:
+                sel = input("Please select slot-Id:")
+                if sel == 1:
+                    self.admin.Close()
+                slotId = np.uint32(sel)
         except Exception as e:
             print(e)
         return slotId
@@ -104,7 +105,7 @@ class Proteus:
 
     def Wave(self):
         inst = self.inst
-        sclk = self.sclk
+        sclk=self.sclk
         seg_file_path = datapath + 'segments\\csv\\FiveCyclesSine_16Bit2048pts.csv'
 
         # Reset AWG to Factory settings

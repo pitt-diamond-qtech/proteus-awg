@@ -6,7 +6,7 @@ from scipy.signal import chirp, sweep_poly
 import matplotlib.pyplot as plt
 
 from taborTools.instFunction import *
-from taborTools.waveFunction import *
+from tools.waveFunction import *
 
 #### Waveform Parameters ####
 sclk = 2.5e9
@@ -27,7 +27,8 @@ segmentLen = 2048
 #### Guassian Specific
 #sigma = 10
 #### Set Path ####
-seg_file_path = '..\Segments\segments16bitBin\FourCyclesSineWave_16Bit.bin'
+# seg_file_path = '..\Segments\segments16bitBin\FourCyclesSineWave_16Bit.bin'
+seg_file_path = '..\\segments\\bin\\'
 
 waveform = sineWave(segmentLen, bits, cycles, amplitude)
 #waveform = chirpWave(sclk, chirpRamp, bits, chirpStart, chirpBW, amplitude)
@@ -48,13 +49,6 @@ f.close()
 
 f=open("temp.seg","rb")
 num=list(f.read())
-#print (num)
+print(num)
 print (len(num))
 f.close()
-
-
-
-
-    
-    
- 

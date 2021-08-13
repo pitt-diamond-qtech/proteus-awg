@@ -98,7 +98,7 @@ def loadSegmentData(inst, segNum, segData):
             
 def loadDLL():
     # This function loads the .NET DLL into memory
-    clr.AddReference(r'E:\PycharmProjects\Proteus\admin\TEPAdmin.dll')
+    clr.AddReference(r'D:\PycharmProjects\proteus-awg\admin\TEPAdmin.dll')
 
     from TaborElec.Proteus.CLI.Admin import CProteusAdmin
     from TaborElec.Proteus.CLI.Admin import IProteusInstrument

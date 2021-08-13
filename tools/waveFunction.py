@@ -1,6 +1,5 @@
 import numpy as np
 from scipy import signal as sg
-from scipy.signal import chirp
 
 def squareWave(segmentLength, bits, cycles, duty, amp):
     
@@ -20,7 +19,7 @@ def sineWave(segmentLength, bits, cycles, amp):
 
     dacSignal = scaleWaveform(rawSignal, bits)
     
-    return(dacSignal);   
+    return time,rawSignal
 
 def triangleWave(segmentLength, bits, cycles, width, amp):
     
@@ -41,20 +40,7 @@ def guassianPulse(segmentLength, bits, cycles, sigma, amp):
 
     dacSignal = scaleWaveform(rawPulse, bits)
     
-    return(dacSignal);      
-    
-def chirpWave(sclk, chirpRampTime, bits, chirpStartFreq, chirpBW, amp):
-
-    segLen = sclk * chirpRampTime
-    segLenRound = round(segLen/64)
-    segLen = 64 * segLenRound
-    print(segLen)
-    time = np.linspace(0, chirpRampTime, segLen)
-    rawSignal = chirp(time, f0=chirpStartFreq, f1=chirpStartFreq+chirpBW, t1=chirpRampTime, method='linear') 
-    
-    dacSignal = scaleWaveform(rawSignal, bits)
-    
-    return(dacSignal);   
+    return(dacSignal);
     
     
 def scaleWaveform(rawSignal, bits):
@@ -77,4 +63,4 @@ def scaleWaveform(rawSignal, bits):
             j=j+2
         dacSignal = dacSignal16
     
-    return(dacSignal);
+    return dacSignal
