@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 sclk = 1.25e9
 bits = 16
 amplitude = 1
-cycles = 5
+cycles = 1
 segmentLen = 2048
 
 # frequencyHz = 1e6
@@ -23,13 +23,13 @@ width = 0.5
 # Guassian Specific
 sigma = 10
 
-t,y = sineWave(segmentLen, bits, cycles, amplitude)
-#waveform = guassianPulse(segmentLen, bits, cycles, sigma, amplitude)
-#waveform = squareWave(segmentLen, bits,, cycles, duty, amplitude)
+# waveform = sineWave(segmentLen, bits, cycles, amplitude)
+waveform = guassianPulse(segmentLen, bits, cycles, sigma, amplitude)
+# waveform = squareWave(segmentLen, bits, cycles, duty, amplitude)
 #waveform = triangleWave(segmentLen, bits, cycles, width, amplitude)
 
 # print(waveform)
-plt.plot(t,y)
+plt.plot(waveform)
 plt.show()
 
 # should define the seg. file. path

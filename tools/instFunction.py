@@ -6,36 +6,27 @@ import ctypes  # allows C compatible data types and calling functions in DLLs or
 import numpy as np
 
 maxScpiResponse = 65535
+dllpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '\\admin\\TEPAdmin.dll'
 
-def findFileType(segName):
-    if ".csv" in segName:
-        fileType = "csv"
-    if ".bin" in segName:
-        fileType = "bin"
-    if ".seg" in segName:
-        fileType = "bin"
-    return(fileType)
+# def findFileType(segName):  # done
+#     if ".csv" in segName:
+#         fileType = "csv"
+#     if ".bin" in segName:
+#         fileType = "bin"
+#     if ".seg" in segName:
+#         fileType = "bin"
+#     return(fileType)
 
-def readFiles(inst, segName):
-    res = SendScpi(inst, ":SYST:INF:MODel?")
-    fileType = findFileType(segName)
-    if res.RespStr == "P9082M":
-        # 8 bit device
-        if fileType == "bin":
-            bin_dat = np.fromfile(file=segName, dtype=np.uint8)
-        else:
-            bin_dat = np.loadtxt(fname=segName, dtype=np.uint8, delimiter=',')
-        seg_len = len(bin_dat)
-    else:
-        # 16 bit device
-        if fileType == "bin":
-            bin_dat = np.fromfile(file=segName, dtype=np.uint8)
-        else:   
-            bin_dat = np.loadtxt(fname=segName, dtype=np.uint16, delimiter=',')
-        bin_dat = bin_dat.view(dtype=np.uint8)
-        seg_len = int(len(bin_dat) / 2)
-        
-    return(bin_dat, seg_len)
+# def readFiles(segName):  # done
+#     fileType = findFileType(segName)
+#     if fileType == "bin":
+#         bin_dat = np.fromfile(file=segName, dtype=np.uint8)
+#     else:
+#         bin_dat = np.loadtxt(fname=segName, dtype=np.uint16, delimiter=',')
+#     bin_dat = bin_dat.view(dtype=np.uint8)
+#     seg_len = int(len(bin_dat) / 2)
+#
+#     return bin_dat, seg_len
   
 def getSclkTrigLev(inst):
     res = SendScpi(inst, ":SYST:INF:MODel?")
@@ -47,20 +38,22 @@ def getSclkTrigLev(inst):
         trig_lev = 32768
     return(trig_lev)
     
-def loadSegment(inst, segNum, seg_file_path):
-    bin_dat, seg_len = readFiles(inst, seg_file_path) 
-    SendScpi(inst, ":TRACe:DEF {0},{1}".format(segNum, seg_len))
-    SendScpi(inst, ":TRACe:SEL {0}".format(segNum))  
-    inDatLength = len(bin_dat)
-    inDatOffset = 0
-    res = inst.WriteBinaryData(":TRAC:DATA 0,#", bin_dat, inDatLength, inDatOffset)
-    
-    if (res.ErrCode != 0):
-        print("Error {0} ".format(res.ErrCode))
-    else:
-        if (len(res.RespStr) > 0):
-            print("{0}".format(res.RespStr))
-            
+# def loadSegment(inst, segNum, seg_file_path):  #done
+#     bin_dat, seg_len = readFiles(inst, seg_file_path)
+#     SendScpi(inst, ":TRACe:DEF {0},{1}".format(segNum, seg_len))
+#     SendScpi(inst, ":TRACe:SEL {0}".format(segNum))
+#     inDatLength = len(bin_dat)
+#     inDatOffset = 0
+#     res = inst.WriteBinaryData(":TRAC:DATA 0,#", bin_dat, inDatLength, inDatOffset)
+#
+#     if (res.ErrCode != 0):
+#         print("Error {0} ".format(res.ErrCode))
+#     else:
+#         if (len(res.RespStr) > 0):
+#             print("{0}".format(res.RespStr))
+
+#################################################################################
+#################################################################################
 def loadSegmentBin(inst, segNum, seg_file_path):
     seg_len = readBinSegLen(seg_file_path) 
     res = SendScpi(inst, ":TRACe:DEF {0},{1}".format(segNum, seg_len))
@@ -79,6 +72,8 @@ def readBinSegLen(seg_file_path):
     print (len(num))
     f.close()
     return len(num)
+#################################################################################
+#################################################################################
 
 def loadSegmentData(inst, segNum, segData):
     res = SendScpi(inst, ":SYST:INF:MODel?")
@@ -96,15 +91,15 @@ def loadSegmentData(inst, segNum, segData):
         if (len(res.RespStr) > 0):
             print("{0}".format(res.RespStr))
             
-def loadDLL():
-    # This function loads the .NET DLL into memory
-    clr.AddReference(r'D:\PycharmProjects\proteus-awg\admin\TEPAdmin.dll')
+# def loadDLL():  # done
+#     # This function loads the .NET DLL into memory
+#     clr.AddReference(dllpath)
+#
+#     from TaborElec.Proteus.CLI.Admin import CProteusAdmin
+#     from TaborElec.Proteus.CLI.Admin import IProteusInstrument
+#     return CProteusAdmin(OnLoggerEvent);
 
-    from TaborElec.Proteus.CLI.Admin import CProteusAdmin
-    from TaborElec.Proteus.CLI.Admin import IProteusInstrument
-    return CProteusAdmin(OnLoggerEvent);
-
-def SendBinScpi(inst,prefix,path):
+def SendBinScpi(inst,prefix,path):  # no need
     try:
         print(prefix)
         inBinDat = bytearray(path, "utf8")
@@ -118,11 +113,11 @@ def SendBinScpi(inst,prefix,path):
                 print("{0}".format(res.RespStr))
         print("\n")
         return res
-    except Exception as e: 
+    except Exception as e:
         print(e)
         return res
 
-def SendScpi(inst,line):
+def SendScpi(inst,line):  #done
     try:
         print(line)
         line = line + "\n"
@@ -137,7 +132,7 @@ def SendScpi(inst,line):
             print("{0}".format(res.RespStr))
         print("\n")
         return res
-    except Exception as e: 
+    except Exception as e:
         print(e)
         return res
     
@@ -175,34 +170,34 @@ def ReadFromAsciiFile(inst,fname):
         StreamReader.close()
     except Exception as e: 
         print(e)
-             
-def getSlotId(admin):    
-    try:
-        rc = admin.Open()  
-        Validate(rc,__name__,inspect.currentframe().f_back.f_lineno)
 
-        slotIds = admin.GetSlotIds()
-        n = 0
-        for i in range(0,slotIds.Length,1):
-            slotId = slotIds[i]
-            slotInfo = admin.GetSlotInfo(slotId)
-            if slotInfo:
-                if not slotInfo.IsDummySlot:
-                    n = n + 1
-                    print("{0}. Slot-ID {1} [chassis {2}, slot {3}], IsDummy={4}, IsInUse={5}, IDN=\'{6}\'".
-                        format(i + 1,slotId,slotInfo.ChassisIndex,slotInfo.SlotNumber,
-                               'Yes' if slotInfo.IsDummySlot !=0 else 'No',
-                               'Yes' if slotInfo.IsSlotInUse !=0 else 'No',
-                               slotInfo.GetIdnStr()))
-                else:
-                    dummy=1
-                    #print("{0}. Slot-ID {1} - Failed to acquire Slot Information!".format(i + 1,slotId))
-
-        if n == 1:     
-            sel = slotIds[0]
-        else:
-            sel = input("Please select slot-Id:") 
-        slotId = np.uint32(sel)
-    except Exception as e: 
-        print(e)
-    return slotId
+# def getSlotId(admin):  #done
+#     try:
+#         rc = admin.Open()
+#         Validate(rc,__name__,inspect.currentframe().f_back.f_lineno)
+#
+#         slotIds = admin.GetSlotIds()
+#         n = 0
+#         for i in range(0,slotIds.Length,1):
+#             slotId = slotIds[i]
+#             slotInfo = admin.GetSlotInfo(slotId)
+#             if slotInfo:
+#                 if not slotInfo.IsDummySlot:
+#                     n = n + 1
+#                     print("{0}. Slot-ID {1} [chassis {2}, slot {3}], IsDummy={4}, IsInUse={5}, IDN=\'{6}\'".
+#                         format(i + 1,slotId,slotInfo.ChassisIndex,slotInfo.SlotNumber,
+#                                'Yes' if slotInfo.IsDummySlot !=0 else 'No',
+#                                'Yes' if slotInfo.IsSlotInUse !=0 else 'No',
+#                                slotInfo.GetIdnStr()))
+#                 else:
+#                     dummy=1
+#                     #print("{0}. Slot-ID {1} - Failed to acquire Slot Information!".format(i + 1,slotId))
+#
+#         if n == 1:
+#             sel = slotIds[0]
+#         else:
+#             sel = input("Please select slot-Id:")
+#         slotId = np.uint32(sel)
+#     except Exception as e:
+#         print(e)
+#     return slotId

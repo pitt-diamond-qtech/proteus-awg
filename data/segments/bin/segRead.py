@@ -1,5 +1,5 @@
 filePath = ""
-fileName = "TwoCyclesTriangleWave_16Bit4096.bin"
+fileName = "TwoCyclesTriangle_16Bit4096pts.bin"
 f=open(filePath+fileName,"rb")
 num=list(f.read())
 print (num)

@@ -8,28 +8,25 @@ import time
 import numpy as np
 from tools.instFunction import *
 
-#prints the current directory
 datapath = os.path.dirname(sys.argv[0])
 if (datapath):
     datapath = datapath + "\\"
-print(datapath)
 
 class Proteus:
-    '''This is the class def for the Proteus 1284M/2582M AWG.
+    """This is the class def for the Proteus 1284M/2582M AWG.
     Example of how to call and setup the AWG:
         awg = Proteus()
-        awg.sendcommand("") - Send an SCPI command to the awg
+        awg.sendcommand("command") - Send an SCPI command to the awg
         awg.close() - Close the instrument
-        Proteus.cleanup() - Close all the sessiona
-    '''
+        awg.cleanup() - Close all the sessions
+    """
 
     def __init__(self):
         try:
             self.admin = loadDLL()  # initializes the DLL file
-            self.slotId = self.getSlotId(self.admin)  # uses the DLL file to call the instruments
+            self.slotId = self.getslotID(self.admin)  # uses the DLL file to call the instruments
             if not self.slotId:
                 sys.exit()
-                print("Invalid choice!")
             else:
                 self.inst = self.admin.OpenInstrument(self.slotId)
                 if not self.inst:
@@ -47,7 +44,7 @@ class Proteus:
         except Exception as e:
             print(e)
 
-    def getSlotId(self, admin):
+    def getslotID(self, admin):
         try:
             admin.Open()
             slotIds = admin.GetSlotIds()
@@ -95,14 +92,14 @@ class Proteus:
             print(e)
             return resp
 
-    def Close(self):
+    def close(self):
         self.sendcommand("*RST")
         self.admin.CloseInstrument(self.instId)
 
-    def Cleanup(self):
+    def cleanup(self):
         self.admin.Close()
 
-    def Wave(self):
+    def sample_wave(self):
         inst = self.inst
         sclk = self.sclk
         seg_file_path = datapath + 'segments\\csv\\FiveCyclesSine_16Bit2048pts.csv'
@@ -145,4 +142,4 @@ class Proteus:
             segNum = int(input('Number: '))
             self.sendcommand(":SOUR:FUNC:SEG {0}".format(segNum))
 
-        self.Close()
+        self.close()

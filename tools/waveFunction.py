@@ -9,7 +9,7 @@ def squareWave(segmentLength, bits, cycles, duty, amp):
     
     dacSignal = scaleWaveform(rawSignal, bits)
     
-    return(dacSignal);
+    return dacSignal
     
 def sineWave(segmentLength, bits, cycles, amp):
     
@@ -19,7 +19,7 @@ def sineWave(segmentLength, bits, cycles, amp):
 
     dacSignal = scaleWaveform(rawSignal, bits)
     
-    return time,rawSignal
+    return dacSignal
 
 def triangleWave(segmentLength, bits, cycles, width, amp):
     
@@ -29,18 +29,18 @@ def triangleWave(segmentLength, bits, cycles, width, amp):
 
     dacSignal = scaleWaveform(rawSignal, bits)
     
-    return(dacSignal);      
+    return dacSignal
     
 def guassianPulse(segmentLength, bits, cycles, sigma, amp):
     
     time = np.linspace(-(segmentLength)/2, (segmentLength)/2, segmentLength)
     omega = 2 * np.pi * cycles
-    variance=np.power(sigma, 2.) # is the pulse half-duration
+    variance = np.power(sigma, 2.) # is the pulse half-duration
     rawPulse = amp*(np.exp(-np.power((omega*time/segmentLength), 2.) / (2 * variance)))
 
     dacSignal = scaleWaveform(rawPulse, bits)
     
-    return(dacSignal);
+    return dacSignal
     
     
 def scaleWaveform(rawSignal, bits):
@@ -56,11 +56,11 @@ def scaleWaveform(rawSignal, bits):
         for i in range(0,len(dacSignal)*2):
             dacSignal16.append(0)
             
-        j=0
-        for i in range(0,len(dacSignal)):
+        j = 0
+        for i in range(0, len(dacSignal)):
             dacSignal16[j] = dacSignal[i] & 0x0f
             dacSignal16[j+1] = dacSignal[i] >> 8
-            j=j+2
+            j += 2
         dacSignal = dacSignal16
     
     return dacSignal
